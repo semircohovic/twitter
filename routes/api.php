@@ -2,6 +2,7 @@
 
 use \App\Http\Controllers\TweetController;
 use \App\Http\Controllers\UserController;
+use \App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,6 @@ Route::middleware('auth:api')->group(function() {
     Route::get("user", [UserController::class, "user"]);
 
     Route::resource('tweets',TweetController::class);
+    Route::resource('comments', CommentController::class);
 
 });

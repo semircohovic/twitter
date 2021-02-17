@@ -12,4 +12,8 @@ class Tweet extends Model
     protected $fillable = [
         'user_id', 'tweet', 'is_Active'
     ];
+    public function comment() {
+        return $this->hasMany('App\Models\Comment');
+    }
+
 }

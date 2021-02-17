@@ -58,7 +58,7 @@ class TweetController extends Controller
             if (!is_null($tweet)) {
                 return response()->json(['status' => 'success', 'message' => 'Success! tweet created', 'data' => $tweet]);
             } else {
-                return response()->json(['status' => 'failed', 'message' => 'Whoops! task not created"']);
+                return response()->json(['status' => 'failed', 'message' => 'Whoops! tweet not created"']);
             }
         }
     }
@@ -125,7 +125,7 @@ class TweetController extends Controller
 //            $tweet = Tweet::where('id', $tweet)->where('user_id', $user->id)->first();
 //            $update = $tweet->update($tweetU);
             $tweet->update();
-            return response()->json(['status' => 'success', 'message' => 'Success!! task deleted'], 200);
+            return response()->json(['status' => 'success', 'message' => 'Success!! tweet deleted'], 200);
         } else {
             return response()->json(["status" => "failed", "message" => "Un-authorized user"], 403);
         }
