@@ -73,7 +73,7 @@ class TweetController extends Controller
     {
         $user = Auth::user();
         if (!is_null($user)) {
-            $tweet = Tweet::where('user_id', $user->id)->where("id", $id)->first();
+            $tweet = Tweet::where('user_id', $user->id)->where("id", $id)->where('is_Active', true)->first();
             if (!is_null($tweet)) {
                 return response()->json(['status' => "success", 'data' => $tweet], 200);
             } else {
