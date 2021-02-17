@@ -20,7 +20,7 @@ class TweetController extends Controller
         // check logged user
         $user=Auth::user();
         if(!is_null($user)) {
-            $tweets=Tweet::where("user_id", $user->id)->get();
+            $tweets=Tweet::where("user_id", $user->id)->where("is_Active", true)->get();
             if(count($tweets) > 0) {
                 return response()->json(["status" => "success", "count" => count($tweets), "data" => $tweets], 200);
             }
@@ -52,6 +52,7 @@ class TweetController extends Controller
             }
             $tweetInput = $request->all();
             $tweetInput['user_id'] = $user->id;
+            $tweetInput['is_Active'] = true;
 
             $tweet = Tweet::create($tweetInput);
             if (!is_null($tweet)) {
@@ -119,8 +120,11 @@ class TweetController extends Controller
     public function destroy(Tweet $tweet)
     {
         $user = Auth::user();
+        $tweet['is_Active'] = false;
         if (!is_null($user)) {
-            $tweet = Tweet::where('id', $tweet)->where('user_id', $user->id)->delete();
+//            $tweet = Tweet::where('id', $tweet)->where('user_id', $user->id)->first();
+//            $update = $tweet->update($tweetU);
+            $tweet->update();
             return response()->json(['status' => 'success', 'message' => 'Success!! task deleted'], 200);
         } else {
             return response()->json(["status" => "failed", "message" => "Un-authorized user"], 403);
