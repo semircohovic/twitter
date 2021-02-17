@@ -97,4 +97,18 @@ class CommentController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'Un-authorized user'], 403);
         }
     }
+    public function showTweetComments($id) {
+        $user = Auth::user();
+
+        if(!is_null($user)) {
+            $comments = Comment::where('tweet_id', $id)->where('is_Active', true)->get();
+            if(!is_null($comments)) {
+                return response()->json(['status' => 'success', 'data' => $comments], 200);
+            } else {
+                return response()->json(['status' => 'failed','message' => 'Failed no comment found for this tweet'], 200);
+            }
+        } else {
+            return response()->json(['status' => 'failed', 'message' => 'Un-authorized'], 403);
+        }
+    }
 }

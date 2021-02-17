@@ -22,7 +22,7 @@ Route::post('login', [UserController::class, 'login']);
 Route::middleware('auth:api')->group(function() {
 
     Route::get("user", [UserController::class, "user"]);
-
+    Route::get('tweets/{id}/comments', [CommentController::class, 'showTweetComments']);
     Route::resource('tweets',TweetController::class);
     Route::resource('comments', CommentController::class);
 
