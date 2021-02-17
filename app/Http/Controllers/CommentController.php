@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    // todo: prikazi sve komentare
+    /*
+    **
+    * Display a listing of the resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function index() {
+        $user = Auth::user();
+        if(!is_null($user)){
+            $comments = Comment::where('user_id', $user->id)->where('is_Active', true)->get();
+            if(count($comments) > 0 ) {
+                return response()->json(['status' => 'success', 'count' => count($comments), 'data' => $comments], 200);
+            } else {
+                return response()->json(['status' => 'failed', 'count' => count($comments), 'message' => 'Failed! no comments found'], 204);
+            }
+        }
+    }
     //todo: kreiraj komentar
     /**
      * Store a newly created resource in storage.
@@ -42,5 +60,41 @@ class CommentController extends Controller
         }
     }
     //todo: izmijeni komentar
+    public function update(Request $request, Comment $comment) {
+        $input = $request->all();
+        $user = Auth::user();
+
+        if(!is_null($user)) {
+            $validator = Validator::make($request->all(), [
+                'comment' => 'required'
+            ]);
+            if($validator->fails()){
+                return response()->json(['status' => 'failed', 'validation_errors' => $validator->errors()]);
+            }
+            $update = $comment->update($request->all());
+
+            return response()->json(['status' => 'success', 'message' => 'Success! comment updated', 'data' => $comment], 200);
+        } else {
+            return response()->json(['status' => 'failed', 'message' => 'Un-authorized user'], 403);
+        }
+    }
     //todo: obrisi komentar
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function destroy(Comment $comment) {
+        $user = Auth::user();
+        $comment['is_Active'] = false;
+        if(!is_null($user)){
+            $comment->update();
+            return response()->json(['status' => 'success', 'message' => 'Success!! comment deleted'], 200);
+        } else
+        {
+            return response()->json(['status' => 'failed', 'message' => 'Un-authorized user'], 403);
+        }
+    }
 }
